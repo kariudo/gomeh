@@ -8,7 +8,7 @@ gomeh is an interface for the Meh.com daily deal site's API.
 ## Installation ##
 
 ### Install the package:
-    go get github.com/kariudo/gomeh
+    $ go get github.com/kariudo/gomeh
 
 ### In your code:
 
