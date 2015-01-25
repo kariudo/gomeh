@@ -1,4 +1,8 @@
 # gomeh #
+
+[![GoDoc](https://godoc.org/github.com/kariudo/gomeh?status.svg)](https://godoc.org/github.com/kariudo/gomeh)
+[![Build Status](https://travis-ci.org/kariudo/gomeh.svg?branch=master)](https://travis-ci.org/kariudo/gomeh)
+
 gomeh is an interface for the Meh.com daily deal site's API.
 
 ## Requirements
