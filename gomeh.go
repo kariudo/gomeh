@@ -113,7 +113,6 @@ func callAPI(apikey string) []byte {
 		log.Fatal(err)
 	}
 	res, err := client.Do(req)
-	// fmt.Printf("%+v", res)
 	if err != nil {
 		log.Fatal(err)
 	}
