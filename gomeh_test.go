@@ -12,22 +12,19 @@ import (
 func readKey() string {
 	f := "./apikey"
 	var key string
-	// If API key file exists
-	if _, err := os.Stat(f); err == nil {
+	// If API key env exists use that
+	if env := os.Getenv("meh_apikey"); env != "" {
+		// Read API key from env (for travis)
+		key = env
+	} else {
 		// Read API key from file
-		fmt.Println("Reading from file.")
 		buf, err := ioutil.ReadFile(f)
 		if err != nil {
 			log.Fatal(err)
 		}
 		key = string(buf)
-	} else {
-		fmt.Println("Reading from file.")
-		// Read API key from env (for travis)
-		key = os.Getenv("meh_apikey")
 	}
 	// Trim the string to remove any whitespace or linebreaks
-	fmt.Println(key)
 	return strings.Trim(key, " \n")
 }
 
