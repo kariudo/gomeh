@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 )
@@ -96,34 +95,6 @@ type Answer struct {
 	VoteCount int    `json:"voteCount"`
 }
 
-const mehURL = "https://api.meh.com/1/current.json?apikey="
-
-func callAPI(apikey string) []byte {
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{
-			CipherSuites: []uint16{tls.TLS_RSA_WITH_AES_256_CBC_SHA},
-			MaxVersion:   tls.VersionTLS10,
-		},
-	}
-	client := &http.Client{Transport: tr}
-	url := string(mehURL + apikey)
-	req, err := http.NewRequest("GET", url, nil)
-	req.Header.Add("Content-Type", "application/json")
-	if err != nil {
-		log.Fatal(err)
-	}
-	res, err := client.Do(req)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer res.Body.Close()
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return body
-}
-
 // String returns the title of the Meh with the price and prefixes [Sold Out] if
 // there is a SoldOutAt time set.
 func (m Meh) String() (s string) {
@@ -140,12 +111,50 @@ func (m Meh) SoldOut() bool {
 	return !m.Deal.SoldOutAt.IsZero()
 }
 
-// GetMeh returns the current Meh
-func GetMeh(apikey string) (meh *Meh) {
-	apiData := callAPI(apikey)
-	err := json.Unmarshal(apiData, &meh)
+const mehURL = "https://api.meh.com/1/current.json?apikey="
+
+func callAPI(apikey string) (body []byte, err error) {
+	// Configure http transport and client settings for SSL1.1 and AES256 cipher
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{
+			CipherSuites: []uint16{tls.TLS_RSA_WITH_AES_256_CBC_SHA},
+			MaxVersion:   tls.VersionTLS11,
+		},
+	}
+	client := &http.Client{Transport: tr}
+	url := string(mehURL + apikey)
+
+	// Create and execute the GET request
+	res, err := client.Get(url)
 	if err != nil {
-		log.Fatal(err)
+		return
+	}
+
+	// Close the connection when done
+	defer res.Body.Close()
+
+	// Read out the response body []byte
+	body, err = ioutil.ReadAll(res.Body)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+// GetMeh returns the current Meh
+func GetMeh(apikey string) (meh Meh, err error) {
+
+	// Get current data from api as []byte
+	apiData, err := callAPI(apikey)
+	if err != nil {
+		return
+	}
+
+	// Populate a Meh with the deserialized json
+	err = json.Unmarshal(apiData, &meh)
+	if err != nil {
+		return
 	}
 
 	return
