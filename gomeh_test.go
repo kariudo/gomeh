@@ -17,12 +17,14 @@ func readKey() string {
 		// Read API key from env (for travis)
 		key = env
 	} else {
-		// Read API key from file
-		buf, err := ioutil.ReadFile(f)
-		if err != nil {
-			log.Fatal(err)
+		// Read API key from file, if exists
+		if _, err := os.Stat(f); err == nil {
+			buf, err := ioutil.ReadFile(f)
+			if err != nil {
+				log.Fatal(err)
+			}
+			key = string(buf)
 		}
-		key = string(buf)
 	}
 	// Trim the string to remove any whitespace or linebreaks
 	return strings.Trim(key, " \n")
