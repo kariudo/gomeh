@@ -2,7 +2,7 @@
 
 [![GoDoc](https://godoc.org/github.com/kariudo/gomeh?status.svg)](https://godoc.org/github.com/kariudo/gomeh)
 [![Build Status](https://travis-ci.org/kariudo/gomeh.svg?branch=master)](https://travis-ci.org/kariudo/gomeh)
-[![Coverage Status](https://coveralls.io/repos/kariudo/gomeh/badge.svg)](https://coveralls.io/r/kariudo/gomeh)
+[![Coverage Status](https://coveralls.io/repos/kariudo/gomeh/badge.svg?branch=master)](https://coveralls.io/r/kariudo/gomeh?branch=master)
 
 gomeh is an interface for the Meh.com daily deal site's API.
 
