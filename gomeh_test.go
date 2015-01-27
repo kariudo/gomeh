@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 )
 
 func readKey() string {
@@ -47,5 +48,45 @@ func TestGetMeh(t *testing.T) {
 	}
 	if len(m.Deal.Title) == 0 {
 		t.Error("Missing deal.")
+	}
+}
+
+func TestSoldOut(t *testing.T) {
+	m := Meh{
+		Deal: Deal{
+			SoldOutAt: time.Now(),
+		},
+	}
+	if m.SoldOut() != true {
+		t.Error("Failed to correctly recognize as Sold Out.")
+	}
+}
+
+func TestString(t *testing.T) {
+	// Available product
+	m := Meh{
+		Deal: Deal{
+			Title: "Product",
+			Items: []Item{
+				Item{Price: 5},
+			},
+		},
+	}
+	if fmt.Sprint(m) != fmt.Sprint("Product - $5") {
+		t.Error("Failed to return available product string.")
+	}
+	// Sold out produc
+	// Available product
+	m = Meh{
+		Deal: Deal{
+			Title:     "Product2",
+			SoldOutAt: time.Now(),
+			Items: []Item{
+				Item{Price: 5},
+			},
+		},
+	}
+	if fmt.Sprint(m) != fmt.Sprint("[Sold Out] Product2 - $5") {
+		t.Error("Failed to return available product string.")
 	}
 }
